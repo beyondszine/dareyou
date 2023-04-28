@@ -60,9 +60,11 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _verifyCode,
-                child: const Text('Verify'),
+              Center(
+                child: ElevatedButton(
+                  onPressed: _verifyCode,
+                  child: const Text('Verify'),
+                ),
               ),
             ],
           ),
