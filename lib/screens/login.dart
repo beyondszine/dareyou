@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_button/sign_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,6 +14,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _phoneController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final GoogleSignIn googleSignIn = GoogleSignIn(
+        clientId: '733772929308-t7tfllh29u9safgh07usf501him99f6t.apps.googleusercontent.com',
+  );
 
   Future<void> _sendCode() async {
     if (_formKey.currentState!.validate()) {
@@ -63,10 +68,43 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _sendCode,
-                child: const Text('Send code'),
+              Center(
+                child: ElevatedButton(
+                  onPressed: _sendCode,
+                  child: const Text('Send code'),
+                ),
               ),
+              Divider(
+                  height: 50,
+                  color: Colors.grey[300],
+                  thickness: 1,
+                  indent : 50,
+                  endIndent : 50,       
+              ),
+              Center(
+                child: SignInButton(
+                  buttonType: ButtonType.google,
+                  onPressed: () async {
+                    // Start the Google Sign-In flow
+                    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+                    if (googleUser != null) {
+                      // Convert the GoogleSignInAccount to a GoogleAuthCredential
+                      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+                      final credential = GoogleAuthProvider.credential(
+                        accessToken: googleAuth.accessToken,
+                        idToken: googleAuth.idToken,
+                      );
+
+                      // Sign in with Firebase using the Google credential
+                      await FirebaseAuth.instance.signInWithCredential(credential);
+
+                      // Navigate to the home screen
+                      Navigator.pushNamed(context, '/home');
+                    }
+                  }
+                ),
+              )
             ],
           ),
         ),
