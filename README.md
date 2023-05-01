@@ -1,16 +1,12 @@
-# dareyou
+[![Codemagic build status](https://api.codemagic.io/apps/644f9d02bfd88bf483f873da/644f9d02bfd88bf483f873d9/status_badge.svg)](https://codemagic.io/apps/644f9d02bfd88bf483f873da/644f9d02bfd88bf483f873d9/latest_build)
 
-A new Flutter project.
+# DareYou
 
-## Getting Started
+- 50 push ups right now?
+- Drink a beer bottle in a single shot ?
+- Get a ice bath for >1 minute
+...
 
-This project is a starting point for a Flutter application.
+This flutter project intends to be a dare shop & feed to have fun with your friends, challenge oneself & win more.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<WIP>
