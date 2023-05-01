@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_button/sign_button.dart';
+import 'package:dareyou/assets/consts.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,7 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _phoneController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final GoogleSignIn googleSignIn = GoogleSignIn(
-        clientId: '733772929308-t7tfllh29u9safgh07usf501him99f6t.apps.googleusercontent.com',
+    clientId: googleClientId,
   );
 
   Future<void> _sendCode() async {
@@ -48,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(title: const Text(loginText)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -59,10 +60,11 @@ class _LoginScreenState extends State<LoginScreen> {
               TextFormField(
                 controller: _phoneController,
                 keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(labelText: 'Phone number'),
+                decoration:
+                    const InputDecoration(labelText: labelForPhoneNumber),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your phone number.';
+                    return errorForPhoneNumber;
                   }
                   return null;
                 },
@@ -71,39 +73,45 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                 child: ElevatedButton(
                   onPressed: _sendCode,
-                  child: const Text('Send code'),
+                  child: const Text(otpSendButtonText),
                 ),
               ),
               Divider(
-                  height: 50,
-                  color: Colors.grey[300],
-                  thickness: 1,
-                  indent : 50,
-                  endIndent : 50,       
+                height: 50,
+                color: Colors.grey[300],
+                thickness: 1,
+                indent: 50,
+                endIndent: 50,
               ),
               Center(
                 child: SignInButton(
-                  buttonType: ButtonType.google,
-                  onPressed: () async {
-                    // Start the Google Sign-In flow
-                    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+                    buttonType: ButtonType.google,
+                    onPressed: () async {
+                      // Start the Google Sign-In flow
+                      final GoogleSignInAccount? googleUser =
+                          await googleSignIn.signIn();
 
-                    if (googleUser != null) {
-                      // Convert the GoogleSignInAccount to a GoogleAuthCredential
-                      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-                      final credential = GoogleAuthProvider.credential(
-                        accessToken: googleAuth.accessToken,
-                        idToken: googleAuth.idToken,
-                      );
+                      if (googleUser != null) {
+                        // Convert the GoogleSignInAccount to a GoogleAuthCredential
+                        final GoogleSignInAuthentication googleAuth =
+                            await googleUser.authentication;
+                        final credential = GoogleAuthProvider.credential(
+                          accessToken: googleAuth.accessToken,
+                          idToken: googleAuth.idToken,
+                        );
 
-                      // Sign in with Firebase using the Google credential
-                      await FirebaseAuth.instance.signInWithCredential(credential);
-
-                      // Navigate to the home screen
-                      Navigator.pushNamed(context, '/home');
-                    }
-                  }
-                ),
+                        // Sign in with Firebase using the Google credential
+                        FirebaseAuth.instance
+                            .signInWithCredential(credential)
+                            .then((value) {
+                          debugPrint(
+                              "Sign in with google credentials completed! Navigating to Home Screen!");
+                          Navigator.pushNamed(context, '/home');
+                        });
+                      } else {
+                        debugPrint(googleSignInNullError);
+                      }
+                    }),
               )
             ],
           ),
