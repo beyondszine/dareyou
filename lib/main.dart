@@ -1,5 +1,4 @@
-import 'package:dareyou/screens/login.dart';
-import 'package:dareyou/screens/verify_otp.dart';
+import 'package:dareyou/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -36,17 +35,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: appTitle,
       initialRoute: initialRoutePage,
-      routes: {
-        '/login': (context) => const LoginScreen(),
-        '/verify': (context) => VerificationScreen(
-              verificationId:
-                  ModalRoute.of(context)!.settings.arguments as String,
-            ),
-        '/home': (context) => const Text("Home Screen!!"),
-      },
+      home: HomeScreen()
     );
   }
 }
