@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'firebase_options.dart';
+import 'package:dareyou/assets/consts.dart';
 
 void main() async {
   // Initialize Sentry
   await SentryFlutter.init(
     (options) {
-      options.dsn =
-          'https://657acfc9e0f04864af6a6739c00f8ede@o4505075547439104.ingest.sentry.io/4505075548946432';
-      options.tracesSampleRate = 1.0;
+      options.dsn = sentryDsn;
+      options.tracesSampleRate = sampleRate;
     },
     appRunner: () => runApp(const MyApp()),
   );
@@ -37,8 +37,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'OTP Authentication Demo',
-      initialRoute: '/login',
+      title: appTitle,
+      initialRoute: initialRoutePage,
       routes: {
         '/login': (context) => const LoginScreen(),
         '/verify': (context) => VerificationScreen(
@@ -50,5 +50,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-class HomeScreen {}
