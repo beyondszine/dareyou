@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sign_button/sign_button.dart';
 import 'package:dareyou/assets/consts.dart';
 
-import '../../verify/ui/verify_otp.dart';
-import '../bloc/login_bloc.dart';
-import '../../home.dart';
+import 'package:dareyou/screens/verify/ui/verify_otp.dart';
+import 'package:dareyou/screens/login/bloc/login_bloc.dart';
+import 'package:dareyou/screens/home/ui/home.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

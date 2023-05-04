@@ -2,8 +2,7 @@ import 'package:dareyou/screens/login/bloc/login_bloc.dart';
 import 'package:dareyou/screens/verify/bloc/verify_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../home.dart';
+import 'package:dareyou/screens/home/ui/home.dart';
 
 class VerificationScreen extends StatefulWidget {
   final LoginNavigateToVerifyPageActionState loginNavigateState;

@@ -1,9 +1,9 @@
-import 'package:dareyou/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'firebase_options.dart';
 import 'package:dareyou/assets/consts.dart';
+import 'package:dareyou/screens/home/ui/home.dart';
 
 void main() async {
   // Initialize Sentry
@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: appTitle,
       initialRoute: initialRoutePage,
+      debugShowCheckedModeBanner: false,
       home: HomeScreen()
     );
   }
