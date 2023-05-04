@@ -41,6 +41,8 @@ dependencies:
   sentry_flutter: ^7.4.2
   google_sign_in: ^5.2.1
   sign_button: ^2.0.3
+  bloc: ^8.1.1
+  meta: ^1.8.0
 
 dev_dependencies:
   flutter_test:
