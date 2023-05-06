@@ -37,13 +37,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: appTitle,
-      initialRoute: initialRoutePage,
-      debugShowCheckedModeBanner: false,
-      home: const HomeScreen(),
-      routes: {
-        '/login': (context) => const LoginScreen(),
-      },
-    );
+        title: appTitle,
+        initialRoute: initialRoutePage,
+        routes: {'/login': (context) => const LoginScreen()},
+        debugShowCheckedModeBanner: false,
+        home: const HomeScreen());
   }
 }
