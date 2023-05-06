@@ -15,6 +15,8 @@ ios/Runner/GoogleService-Info.plist
 ios/firebase_app_id_file.json
 macos/Runner/GoogleService-Info.plist
 macos/firebase_app_id_file.json
+windows/flutter/generated_plugin_registrant.cc
+windows/flutter/generated_plugins.cmake
 # IntelliJ related
 *.iml
 *.ipr
@@ -47,3 +49,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+.firebase/hosting.YnVpbGQvd2Vi.cache
+windows/flutter/generated_plugin_registrant.cc
+windows/flutter/generated_plugins.cmake
+errors.tmp
