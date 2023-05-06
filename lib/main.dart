@@ -1,3 +1,4 @@
+import 'package:dareyou/screens/login/ui/login.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -35,11 +36,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: appTitle,
-      initialRoute: initialRoutePage,
-      debugShowCheckedModeBanner: false,
-      home: HomeScreen()
-    );
+    return MaterialApp(
+        title: appTitle,
+        initialRoute: initialRoutePage,
+        routes: {'/login': (context) => const LoginScreen()},
+        debugShowCheckedModeBanner: false,
+        home: const HomeScreen());
   }
 }
