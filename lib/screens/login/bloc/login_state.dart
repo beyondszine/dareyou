@@ -23,10 +23,12 @@ class LoginOTPVerificationFailedState extends LoginActionState {
 class LoginNavigateToVerifyPageActionState extends LoginActionState {
   final String verificationId;
   final int? resendtoken;
+  final String phoneNo;
 
   LoginNavigateToVerifyPageActionState({
     required this.verificationId,
-    required this.resendtoken
+    required this.resendtoken,
+    required this.phoneNo
   });
 
 }

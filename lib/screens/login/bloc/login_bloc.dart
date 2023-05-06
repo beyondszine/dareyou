@@ -44,7 +44,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         debugPrint("code sent!!");
         emit(LoginNavigateToVerifyPageActionState(
           verificationId: verificationId,
-          resendtoken: resendtoken
+          resendtoken: resendtoken,
+          phoneNo: phone
         ));
       },
       codeAutoRetrievalTimeout: (_) {},

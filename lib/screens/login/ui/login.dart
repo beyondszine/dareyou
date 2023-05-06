@@ -49,6 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
             );
             break;
           case LoginNavigateToVerifyPageActionState:
+            print("Navigating to verification screen!!");
             final successState = state as LoginNavigateToVerifyPageActionState;
             Navigator.pushReplacement(context, MaterialPageRoute(
               builder: (context) => VerificationScreen(loginNavigateState: successState)
