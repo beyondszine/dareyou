@@ -28,9 +28,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   FutureOr<void> loginOTPAuthButtonClickedEvent(LoginOTPAuthButtonClickedEvent event, Emitter<LoginState> emit) async {
     final phone = '+91${event.phoneController.text.trim()}';
+    
+    final completer = Completer<bool>();
+
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: phone,
-      verificationCompleted: (PhoneAuthCredential credential) {
+      verificationCompleted: (PhoneAuthCredential credential) async {
         debugPrint("verification completed!!");
         debugPrint(credential.toString());
         // gotta sign in here!!
@@ -39,17 +42,21 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         debugPrint("exception occured");
         debugPrint(exception.message);
         emit(LoginOTPVerificationFailedState(verifyException: exception));
+        completer.complete(false);
       },
-      codeSent: (String verificationId, int? resendtoken) async {
+      codeSent: (String verificationId, int? resendtoken) {
         debugPrint("code sent!!");
         emit(LoginNavigateToVerifyPageActionState(
           verificationId: verificationId,
           resendtoken: resendtoken,
           phoneNo: phone
         ));
+        completer.complete(true);
       },
       codeAutoRetrievalTimeout: (_) {},
     );
+
+    await completer.future;
   }
 
   FutureOr<void> loginGoogleAuthButtonClickedEvent(LoginGoogleAuthButtonClickedEvent event, Emitter<LoginState> emit) async {

@@ -71,13 +71,12 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       Center(
                         child: OTPTextField(
                           length: 6,
-                          fieldWidth: 80,
                           style: const TextStyle(
                             fontSize: 17
                           ),
                           width: MediaQuery.of(context).size.width,
                           spaceBetween: 10,
-                          textFieldAlignment: MainAxisAlignment.spaceAround,
+                          textFieldAlignment: MainAxisAlignment.center,
                           fieldStyle: FieldStyle.underline,
                           onChanged: (pin) {},
                           onCompleted: (pin) {
