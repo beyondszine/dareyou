@@ -8,24 +8,26 @@ import 'package:dareyou/assets/consts.dart';
 void main() async {
   // Initialize Firebase
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  } catch (e, stackTrace) {
-    // Report the exception to Sentry
-    await Sentry.captureException(
-      e,
-      stackTrace: stackTrace,
-    );
-  }
   // Initialize Sentry
   await SentryFlutter.init(
     (options) {
       options.dsn = sentryDsn;
       options.tracesSampleRate = sampleRate;
     },
-    appRunner: () => runApp(const MyApp()),
+    appRunner: () async {
+      try {
+        await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+      } catch (e, stackTrace) {
+        // Report the exception to Sentry
+        await Sentry.captureException(
+          e,
+          stackTrace: stackTrace,
+        );
+      }
+      runApp(const MyApp());
+    },
   );
 }
 
