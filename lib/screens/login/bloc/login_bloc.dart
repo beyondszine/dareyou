@@ -11,9 +11,7 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   
-  final GoogleSignIn googleSignIn = GoogleSignIn(
-    clientId: googleClientId,
-  );
+  final GoogleSignIn googleSignIn = GoogleSignIn();
 
   LoginBloc() : super(LoginInitial()) {
     on<LoginInitialEvent>(loginInitialEvent);
