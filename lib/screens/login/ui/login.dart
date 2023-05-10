@@ -28,108 +28,116 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LoginBloc,LoginState>(
-      bloc: loginBloc,
-      listenWhen: (previous, current) => current is LoginActionState,
-      buildWhen: (previous, current) => current is !LoginActionState,
-      listener: (context, state) {
-        switch (state.runtimeType) {
-          case LoginOTPVerificationFailedState:
-            final failedState = state as LoginOTPVerificationFailedState;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text(failedState.verifyException.message ?? 'Something went wrong.')),
-            );
-            break;
-          case LoginGoogleVerificationFailedState:
-            final failedState = state as LoginGoogleVerificationFailedState;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text(failedState.gAuthException.isNotEmpty ? failedState.gAuthException :'Something went wrong.')),
-            );
-            break;
-          case LoginNavigateToVerifyPageActionState:
-            final successState = state as LoginNavigateToVerifyPageActionState;
-            Navigator.pushReplacement(context, MaterialPageRoute(
-              builder: (context) => VerificationScreen(loginNavigateState: successState)
-            ));
-            break;
-          case LoginNavigateToHomePageActionState:
-            Navigator.pushReplacement(context, MaterialPageRoute(
-              builder: (context) => const HomeScreen()
-            ));
-            break;
-          default:
-            debugPrint("Unhandled Action State!");
-        }
-      },
-      builder: (context, state) {
-        switch (state.runtimeType) {
-          case LoginLoadingState:
-            return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator()
-              ),
-            );
-          case LoginLoadedState:
-            return Scaffold(
-              appBar: AppBar(title: const Text(loginText)),
-              body: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextFormField(
-                        controller: _phoneController,
-                        keyboardType: TextInputType.phone,
-                        decoration:
-                            const InputDecoration(labelText: labelForPhoneNumber),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return errorForPhoneNumber;
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              loginBloc.add(LoginOTPAuthButtonClickedEvent(
-                                phoneController: _phoneController
-                              ));
+    return BlocConsumer<LoginBloc, LoginState>(
+        bloc: loginBloc,
+        listenWhen: (previous, current) => current is LoginActionState,
+        buildWhen: (previous, current) => current is! LoginActionState,
+        listener: (context, state) {
+          switch (state.runtimeType) {
+            case LoginOTPVerificationFailedState:
+              final failedState = state as LoginOTPVerificationFailedState;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text(failedState.verifyException.message ??
+                        'Something went wrong.')),
+              );
+              // So, we've got an error! lets go back to home/login page
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()));
+              break;
+            case LoginGoogleVerificationFailedState:
+              final failedState = state as LoginGoogleVerificationFailedState;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text(failedState.gAuthException.isNotEmpty
+                        ? failedState.gAuthException
+                        : 'Something went wrong.')),
+              );
+              // So, we've got an error! lets go back to home/login page
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()));
+              break;
+            case LoginNavigateToVerifyPageActionState:
+              debugPrint("Navigating to verification screen!!");
+              final successState =
+                  state as LoginNavigateToVerifyPageActionState;
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => VerificationScreen(
+                          loginNavigateState: successState)));
+              break;
+            case LoginNavigateToHomePageActionState:
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()));
+              break;
+            default:
+              debugPrint("Unhandled Action State!");
+          }
+        },
+        builder: (context, state) {
+          switch (state.runtimeType) {
+            case LoginLoadingState:
+              return Scaffold(
+                appBar: AppBar(title: const Text(loginText)),
+                body: const Center(child: CircularProgressIndicator()),
+              );
+            case LoginLoadedState:
+              return Scaffold(
+                appBar: AppBar(title: const Text(loginText)),
+                body: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextFormField(
+                          controller: _phoneController,
+                          keyboardType: TextInputType.phone,
+                          decoration: const InputDecoration(
+                              labelText: labelForPhoneNumber),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return errorForPhoneNumber;
                             }
+                            return null;
                           },
-                          child: const Text(otpSendButtonText),
                         ),
-                      ),
-                      Divider(
-                        height: 50,
-                        color: Colors.grey[300],
-                        thickness: 1,
-                        indent: 50,
-                        endIndent: 50,
-                      ),
-                      Center(
-                        child: SignInButton(
-                            buttonType: ButtonType.google,
-                            onPressed: () async {
-                              loginBloc.add(LoginGoogleAuthButtonClickedEvent());
-                            }
-                        )
-                      )
-                    ],
+                        const SizedBox(height: 16),
+                        Center(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                loginBloc.add(LoginOTPAuthButtonClickedEvent(
+                                    phoneController: _phoneController));
+                              }
+                            },
+                            child: const Text(otpSendButtonText),
+                          ),
+                        ),
+                        Divider(
+                          height: 50,
+                          color: Colors.grey[300],
+                          thickness: 1,
+                          indent: 50,
+                          endIndent: 50,
+                        ),
+                        Center(
+                            child: SignInButton(
+                                buttonType: ButtonType.google,
+                                onPressed: () async {
+                                  loginBloc
+                                      .add(LoginGoogleAuthButtonClickedEvent());
+                                }))
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          default:
-            return const SizedBox();
-        }
-      }
-    );
+              );
+            default:
+              return const SizedBox();
+          }
+        });
   }
 }

@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
+import 'package:otp_timer_button/otp_timer_button.dart';
 
 part 'verify_event.dart';
 part 'verify_state.dart';
@@ -22,7 +23,7 @@ class VerifyBloc extends Bloc<VerifyEvent, VerifyState> {
   FutureOr<void> verifyOTPClickedEvent(VerifyOTPClickedEvent event, Emitter<VerifyState> emit) async {
     final credential = PhoneAuthProvider.credential(
       verificationId: event.verificationId,
-      smsCode: event.enteredOTP.text.trim(),
+      smsCode: event.enteredOTP,
     );
     try {
       UserCredential cred =
@@ -37,6 +38,27 @@ class VerifyBloc extends Bloc<VerifyEvent, VerifyState> {
     }
   }
 
-  FutureOr<void> verifyResendOTPClickedEvent(VerifyResendOTPClickedEvent event, Emitter<VerifyState> emit) {
+  FutureOr<void> verifyResendOTPClickedEvent(VerifyResendOTPClickedEvent event, Emitter<VerifyState> emit) async {
+    event.codeController.loading();
+    await FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: event.phoneNo,
+      forceResendingToken: event.resendToken,
+      verificationCompleted: (PhoneAuthCredential credential) {
+        debugPrint("verification completed!!");
+        debugPrint(credential.toString());
+      },
+      verificationFailed: (exception) {
+        debugPrint("exception occured");
+        debugPrint(exception.message);
+        emit(VerifyResendOTPFailedState(authException: exception));
+      },
+      codeSent: (String verificationId, int? resendtoken) async {
+        debugPrint("code sent!!");
+        emit(VerifyScreenLoadedState());
+      },
+      codeAutoRetrievalTimeout: (_) {},
+    );
+    event.codeController.startTimer();
   }
+
 }

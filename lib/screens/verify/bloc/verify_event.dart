@@ -6,7 +6,7 @@ abstract class VerifyEvent {}
 class VerifyInitialEvent extends VerifyEvent {}
 
 class VerifyOTPClickedEvent extends VerifyEvent {
-  final TextEditingController enteredOTP;
+  final String enteredOTP;
   final String verificationId;
 
   VerifyOTPClickedEvent({
@@ -15,4 +15,16 @@ class VerifyOTPClickedEvent extends VerifyEvent {
   });
 }
 
-class VerifyResendOTPClickedEvent extends VerifyEvent {}
+class VerifyResendOTPClickedEvent extends VerifyEvent {
+  final String verificationId;
+  final int? resendToken;
+  final OtpTimerButtonController codeController;
+  final String phoneNo;
+
+  VerifyResendOTPClickedEvent({
+    required this.verificationId,
+    required this.resendToken,
+    required this.codeController,
+    required this.phoneNo
+  });
+}

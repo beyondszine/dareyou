@@ -11,3 +11,7 @@ const String appTitle = "Dare you! - Login";
 const String labelForPhoneNumber = 'Enter your phone number';
 const String errorForPhoneNumber = 'Please enter your phone number';
 const String otpSendButtonText = "Send OTP!";
+const String otpResendButtonText = "Resend OTP!";
+const String notRecievedOTPText = "Didn't recieve OTP?";
+const String otpVerifyButtonText = "Verify OTP!";
+const int otpResendDuration = 30;

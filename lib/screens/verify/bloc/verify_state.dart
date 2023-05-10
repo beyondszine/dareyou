@@ -20,3 +20,11 @@ class VerifyOTPFailureState extends VerifyActionState {
 }
 
 class VerifyOTPSucessState extends VerifyActionState {}
+
+class VerifyResendOTPFailedState extends VerifyActionState {
+  final FirebaseAuthException authException;
+
+  VerifyResendOTPFailedState({
+    required this.authException
+  });
+}
