@@ -15,3 +15,4 @@ const String otpResendButtonText = "Resend OTP!";
 const String notRecievedOTPText = "Didn't recieve OTP?";
 const String otpVerifyButtonText = "Verify OTP!";
 const int otpResendDuration = 30;
+const userProfileAppBarText = "User Profile";

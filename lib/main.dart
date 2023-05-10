@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:dareyou/firebase_options.dart';
 import 'package:dareyou/assets/consts.dart';
+import 'package:dareyou/screens/profile/ui/profile.dart';
 
 void main() async {
   // Initialize Firebase
@@ -39,8 +40,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: appTitle,
         initialRoute: initialRoutePage,
-        routes: {'/login': (context) => const LoginScreen()},
-        debugShowCheckedModeBanner: false
-    );
+        routes: {
+          '/login': (context) => const LoginScreen(),
+          '/profile': (context) => const UserProfileScreen(),
+        },
+        debugShowCheckedModeBanner: false);
   }
 }

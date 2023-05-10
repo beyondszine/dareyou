@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:meta/meta.dart';
+// import 'package:meta/meta.dart';
 import 'package:otp_timer_button/otp_timer_button.dart';
 
 part 'verify_event.dart';
@@ -20,14 +20,14 @@ class VerifyBloc extends Bloc<VerifyEvent, VerifyState> {
     emit(VerifyScreenLoadedState());
   }
 
-  FutureOr<void> verifyOTPClickedEvent(VerifyOTPClickedEvent event, Emitter<VerifyState> emit) async {
+  FutureOr<void> verifyOTPClickedEvent(
+      VerifyOTPClickedEvent event, Emitter<VerifyState> emit) async {
     final credential = PhoneAuthProvider.credential(
       verificationId: event.verificationId,
       smsCode: event.enteredOTP,
     );
     try {
-      UserCredential cred =
-          await FirebaseAuth.instance.signInWithCredential(credential);
+      UserCredential cred = await FirebaseAuth.instance.signInWithCredential(credential);
       debugPrint("credential recieved:");
       debugPrint(cred.toString());
       emit(VerifyOTPSucessState());
@@ -38,7 +38,8 @@ class VerifyBloc extends Bloc<VerifyEvent, VerifyState> {
     }
   }
 
-  FutureOr<void> verifyResendOTPClickedEvent(VerifyResendOTPClickedEvent event, Emitter<VerifyState> emit) async {
+  FutureOr<void> verifyResendOTPClickedEvent(
+      VerifyResendOTPClickedEvent event, Emitter<VerifyState> emit) async {
     event.codeController.loading();
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: event.phoneNo,
@@ -60,5 +61,4 @@ class VerifyBloc extends Bloc<VerifyEvent, VerifyState> {
     );
     event.codeController.startTimer();
   }
-
 }
