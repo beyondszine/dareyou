@@ -14,4 +14,6 @@ const String otpSendButtonText = "Send OTP!";
 const String otpResendButtonText = "Resend OTP!";
 const String notRecievedOTPText = "Didn't recieve OTP?";
 const String otpVerifyButtonText = "Verify OTP!";
+const String logOutSnackBarMessage = "Logged Out.";
+const String userNotRegisteredText = "User not Registered";
 const int otpResendDuration = 30;
