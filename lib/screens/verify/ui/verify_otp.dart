@@ -1,8 +1,9 @@
 import 'package:dareyou/screens/login/bloc/login_bloc.dart';
+import 'package:dareyou/screens/profile/ui/profile.dart';
 import 'package:dareyou/screens/verify/bloc/verify_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dareyou/screens/home/ui/home.dart';
+// import 'package:dareyou/screens/home/ui/home.dart';
 import 'package:otp_timer_button/otp_timer_button.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
@@ -11,8 +12,7 @@ import 'package:dareyou/assets/consts.dart';
 class VerificationScreen extends StatefulWidget {
   final LoginNavigateToVerifyPageActionState loginNavigateState;
 
-  const VerificationScreen({Key? key, required this.loginNavigateState})
-      : super(key: key);
+  const VerificationScreen({Key? key, required this.loginNavigateState}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -42,21 +42,22 @@ class _VerificationScreenState extends State<VerificationScreen> {
               final failureState = state as VerifyOTPFailureState;
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                    content: Text(failureState.authException.message ??
-                        'Something went wrong.')),
+                    content: Text(failureState.authException.message ?? 'Something went wrong.')),
               );
               break;
             case VerifyOTPSucessState:
               Navigator.of(context).popUntil((route) => route.isFirst);
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()));
+              // Navigator.pushReplacement(context,
+              // MaterialPageRoute(builder: (context) => const HomeScreen()));
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => const UserProfileScreen()));
+
               break;
             case VerifyResendOTPFailedState:
               final failureState = state as VerifyResendOTPFailedState;
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                    content: Text(failureState.authException.message ??
-                        'Something went wrong.')),
+                    content: Text(failureState.authException.message ?? 'Something went wrong.')),
               );
           }
         },
@@ -70,8 +71,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 appBar: AppBar(title: const Text('Verify code')),
                 body: Padding(
                   // putting padding as 5% of screen width
-                  padding:
-                      EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
+                  padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -94,20 +94,17 @@ class _VerificationScreenState extends State<VerificationScreen> {
                             onCompleted: (pin) {
                               verifyBloc.add(VerifyOTPClickedEvent(
                                   enteredOTP: pin,
-                                  verificationId: widget
-                                      .loginNavigateState.verificationId));
+                                  verificationId: widget.loginNavigateState.verificationId));
                             },
                           ),
                         ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.05),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(
-                                  right:
-                                      MediaQuery.of(context).size.width * 0.01),
+                              padding:
+                                  EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.01),
                               child: const Text(
                                 notRecievedOTPText,
                                 style: TextStyle(color: Colors.grey),
@@ -117,10 +114,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                               controller: _otpController,
                               onPressed: () => {
                                 verifyBloc.add(VerifyResendOTPClickedEvent(
-                                    verificationId: widget
-                                        .loginNavigateState.verificationId,
-                                    resendToken:
-                                        widget.loginNavigateState.resendtoken,
+                                    verificationId: widget.loginNavigateState.verificationId,
+                                    resendToken: widget.loginNavigateState.resendtoken,
                                     phoneNo: widget.loginNavigateState.phoneNo,
                                     codeController: _otpController))
                               },

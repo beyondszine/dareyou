@@ -63,15 +63,19 @@ class UserProfileScreenState extends State<UserProfileScreen> {
                     onTap: () {
                       _showImagePicker(context);
                     },
-                    child: CircleAvatar(
-                      radius: 64.0,
-                      backgroundImage: kIsWeb
-                          ? _imageFile != null
-                              ? NetworkImage(_imageFile!.path)
-                              : null
-                          : null,
-                      child: _imageFile == null ? const Icon(Icons.camera_alt) : null,
-                    ),
+                    child: kIsWeb
+                        ? CircleAvatar(
+                            radius: 64.0,
+                            backgroundImage:
+                                _imageFile != null ? NetworkImage(_imageFile!.path) : null,
+                            child: _imageFile == null ? const Icon(Icons.camera_alt) : null,
+                          )
+                        : CircleAvatar(
+                            radius: 64.0,
+                            backgroundImage:
+                                _imageFile != null ? FileImage(File(_imageFile!.path)) : null,
+                            child: _imageFile == null ? const Icon(Icons.camera_alt) : null,
+                          ),
                   ),
                 ),
                 const SizedBox(height: 16.0),
