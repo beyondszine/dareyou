@@ -26,11 +26,9 @@ Future<List<UserProfile>> getRandomUsers(int nummberOfUsers) async {
   final users = List.generate(
     nummberOfUsers,
     (index) => UserProfile(
-      id: index.toString(),
-      firstName: 'User${index + 1}',
-      lastName: 'Lastname${index + 1}',
+      userName: 'User${index + 1}',
       email: 'user${index + 1}@example.com',
-      password: 'password${index + 1}',
+      phoneno: random.nextInt(1000000000).toString(),
       gender: Random().nextInt(2) == 0 ? false : true,
       profileImageURL: 'https://picsum.photos/id/${random.nextInt(1000)}/200/200',
       createdAt: DateTime.now().subtract(Duration(days: random.nextInt(365))),

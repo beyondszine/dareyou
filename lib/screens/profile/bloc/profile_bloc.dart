@@ -19,9 +19,6 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
         super(UserProfileInitial()) {
     on<UserProfileLoadStarted>(_mapUserProfileLoadStartedToState);
     on<UserProfileNameChanged>(_mapUserProfileNameChangedToState);
-    // on<UserProfileAgeChanged>(_mapUserProfileAgeChangedToState);
-    // on<UserProfileSexChanged>(_mapUserProfileSexChangedToState);
-    // on<UserProfileCountryChanged>(_mapUserProfileCountryChangedToState);
     // on<UserProfileImageChanged>(_mapUserProfileImageChangedToState);
     // on<UserProfileSaved>(_mapUserProfileSavedToState);
   }
@@ -42,11 +39,13 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   FutureOr<void> _mapUserProfileNameChangedToState(
       UserProfileNameChanged event, Emitter<UserProfileState> emit) async {
     debugPrint("UserProfileNameChanged event occured!");
-    final currentState = state;
-    if (currentState is UserProfileLoadSuccess) {
-      final updatedUserProfile = currentState.userProfile.copyWith(firstName: event.name);
-      emit(UserProfileLoadSuccess(userProfile: updatedUserProfile));
-    }
+    //TODO: don't let it change unless it was NULL;  i.e. won't let it change after it was set
+
+    // final currentState = state;
+    // if (currentState is UserProfileLoadSuccess) {
+    //   final updatedUserProfile = currentState.userProfile.copyWith(Name: event.name);
+    //   emit(UserProfileLoadSuccess(userProfile: updatedUserProfile));
+    // }
   }
 
   // FutureOr<void> _mapUserProfileAgeChangedToState(

@@ -9,6 +9,11 @@ import 'package:dareyou/assets/consts.dart';
 import 'package:dareyou/screens/profile/bloc/profile_bloc.dart';
 // import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:firebase_storage/firebase_storage.dart';
+// import 'package:firebase_core/firebase_core.dart';
+import 'package:path/path.dart' as path;
+// import 'dart:io' as io;
+// import 'package:universal_html/html.dart' as html;
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
@@ -22,16 +27,16 @@ class UserProfileScreenState extends State<UserProfileScreen> {
   final ImagePicker _imagePicker = ImagePicker();
   XFile? _imageFile;
   final UserProfileBloc userProfileBloc = UserProfileBloc(userRepository: UserProfileRepository());
-  late TextEditingController _nameController;
-  late TextEditingController _ageController;
-  late TextEditingController _countryController;
+  late TextEditingController _userNameController;
+  late TextEditingController _phoneController;
+  late TextEditingController _emailController;
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController();
-    _ageController = TextEditingController();
-    _countryController = TextEditingController();
+    _userNameController = TextEditingController();
+    _phoneController = TextEditingController();
+    _emailController = TextEditingController();
     userProfileBloc.add(UserProfileLoadStarted());
     // UserProfileRepository().getUserProfile().then((userProfile) => {tempUserProfile = userProfile});
   }
@@ -43,9 +48,9 @@ class UserProfileScreenState extends State<UserProfileScreen> {
       listener: (context, UserProfileState state) {
         debugPrint('UserProfileScreen: listener: state: $state');
         if (state is UserProfileLoadSuccess) {
-          _nameController.text = state.userProfile.firstName;
-          _ageController.text = state.userProfile.lastName.toString();
-          _countryController.text = state.userProfile.email;
+          _userNameController.text = state.userProfile.userName;
+          _phoneController.text = state.userProfile.phoneno.toString();
+          _emailController.text = state.userProfile.email.toString();
         }
       },
       builder: (BuildContext context, UserProfileState state) {
@@ -80,25 +85,25 @@ class UserProfileScreenState extends State<UserProfileScreen> {
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
-                  controller: _nameController,
+                  controller: _userNameController,
                   decoration: const InputDecoration(
-                    labelText: 'Name',
+                    labelText: 'Username',
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter your name';
+                      return 'Please enter your username';
                     }
                     return null;
                   },
                 ),
                 TextFormField(
-                  controller: _ageController,
+                  controller: _phoneController,
                   decoration: const InputDecoration(
-                    labelText: 'Age',
+                    labelText: 'Phone Number',
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter your age';
+                      return 'Please enter your contact number';
                     }
                     return null;
                   },
@@ -119,13 +124,13 @@ class UserProfileScreenState extends State<UserProfileScreen> {
                 //   ),
                 // ),
                 TextFormField(
-                  controller: _countryController,
+                  controller: _emailController,
                   decoration: const InputDecoration(
-                    labelText: 'Country',
+                    labelText: 'Email',
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter your country';
+                      return 'Please enter your email address';
                     }
                     return null;
                   },
@@ -135,28 +140,44 @@ class UserProfileScreenState extends State<UserProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        final String downloadUrl;
                         if (_formKey.currentState!.validate()) {
                           debugPrint("Saving user profile");
-                          debugPrint("Name: ${_nameController.text}");
-                          debugPrint("Age: ${_ageController.text}");
-                          debugPrint("Country: ${_countryController.text}");
-
-                          // BlocProvider.of<UserProfileBloc>(context).add(UserProfileSaved(
-                          //   name: _nameController.text,
-                          //   age: int.parse(_ageController.text),
-                          //   country: _countryController.text,
-                          // ));
+                          String fileName = path.basename(_imageFile!.path);
+                          debugPrint("Filename for user profile pic is $fileName");
+                          final Reference storageReference =
+                              FirebaseStorage.instance.ref().child(fileName);
+                          if (!kIsWeb) {
+                            downloadUrl = await storageReference
+                                .putFile(File(_imageFile!.path))
+                                .then((p0) => storageReference.getDownloadURL());
+                            // .then((url) {
+                            //   debugPrint("Download URL for user profile pic is $url");
+                            // });
+                          } else {
+                            debugPrint("WEB platform detected");
+                            var data = await _imageFile!.readAsBytes();
+                            // debugPrint("Data for user profile pic is ${data.toString()}");
+                            await storageReference.putData(data);
+                            var url = await storageReference.getDownloadURL();
+                            debugPrint("Download URL for user profile pic is $url");
+                            downloadUrl = url;
+                          }
+                          UserProfile up = UserProfile(
+                              userName: _userNameController.text,
+                              phoneno: _phoneController.text,
+                              email: _emailController.text,
+                              gender: null,
+                              profileImageURL: downloadUrl,
+                              createdAt: DateTime.now(),
+                              updatedAt: DateTime.now());
+                          debugPrint("Saving user profile: ${up.toJson().toString()}");
+                          // BlocProvider.of<UserProfileBloc>(context)
+                          //     .add(UserProfileSaved(userProfile: up));
                         }
                       },
                       child: const Text('Save'),
-                    ),
-                    const SizedBox(width: 16.0),
-                    ElevatedButton(
-                      onPressed: () {
-                        BlocProvider.of<UserProfileBloc>(context).add(UserProfileEditStarted());
-                      },
-                      child: const Text('Edit'),
                     ),
                   ],
                 ),

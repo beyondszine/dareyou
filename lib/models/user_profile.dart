@@ -1,35 +1,28 @@
 // ignore_for_file: unnecessary_this
 
 class UserProfile {
-  final String id;
-  final String firstName;
-  final String lastName;
-  final String email;
-  final String password;
-  final bool gender;
-  final String profileImageURL;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String userName;
+  final String? email;
+  final String? phoneno;
+  final bool? gender;
+  final String? profileImageURL;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
-  UserProfile({
-    required this.id,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.password,
-    required this.gender,
-    this.profileImageURL = "",
-    required this.createdAt,
-    required this.updatedAt,
-  });
+  UserProfile(
+      {required this.userName,
+      required this.email,
+      required this.phoneno,
+      required this.gender,
+      required this.profileImageURL,
+      required this.createdAt,
+      required this.updatedAt});
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
-      id: json['id'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      email: json['email'],
-      password: json['password'],
+      userName: json['userName'],
+      email: json['email'] ?? "",
+      phoneno: json['phoneno'] ?? "",
       gender: json['gender'],
       profileImageURL: json['profileImageURL'] ?? "",
       createdAt: DateTime.parse(json['createdAt']),
@@ -38,28 +31,25 @@ class UserProfile {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'firstName': firstName,
-        'lastName': lastName,
+        'userName': userName,
         'email': email,
-        'password': password,
+        "phoneno": phoneno,
         'gender': gender,
         'profileImageURL': profileImageURL,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
+        'createdAt': createdAt != null ? createdAt?.toIso8601String() : "",
+        'updatedAt': updatedAt != null ? updatedAt?.toIso8601String() : "",
       };
 
   UserProfile copyWith({
-    String? firstName,
+    String? profileImageURL,
+    bool? gender,
   }) {
     return UserProfile(
-      id: this.id,
-      firstName: firstName ?? this.firstName,
-      lastName: this.lastName,
+      userName: this.userName,
       email: this.email,
-      password: this.password,
-      gender: this.gender,
-      profileImageURL: this.profileImageURL,
+      phoneno: this.phoneno,
+      gender: gender ?? this.gender,
+      profileImageURL: profileImageURL ?? this.profileImageURL,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     );
