@@ -12,9 +12,9 @@ class HomeInitial extends HomeState {}
 class HomeLoadingState extends HomeState {}
 
 class HomeUserSignedInState extends HomeState {
-  final User currentUser;
+  final UserRepository userRepo;
 
-  HomeUserSignedInState({required this.currentUser});
+  HomeUserSignedInState({required this.userRepo});
 }
 
 class HomeUserNotSignedInState extends HomeActionState {}

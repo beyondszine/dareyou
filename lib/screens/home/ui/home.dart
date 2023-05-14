@@ -2,8 +2,6 @@ import 'package:dareyou/assets/consts.dart';
 import 'package:dareyou/screens/home/bloc/home_bloc.dart';
 import 'package:dareyou/screens/login/ui/login.dart';
 import 'package:flutter/material.dart';
-import 'package:dareyou/utils/firestore_utils.dart' as firestore_utils;
-import 'package:dareyou/data/user_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -58,13 +56,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 actions: [
                   IconButton(
                     onPressed: () {
-                      homeBloc.add(HomeUserLogoutEvent(currentUser: homeUserRegisteredState.currentUser));
+                      homeBloc.add(HomeUserLogoutEvent(userRepo: homeUserRegisteredState.userRepo));
                     },
                     icon: const Icon(Icons.logout_outlined)
                   ),
                 ],
               ),
-              body: Text("${homeUserRegisteredState.currentUser})")
+              body: Text("${homeUserRegisteredState.userRepo})")
             ); 
           default:
             return Scaffold(

@@ -6,8 +6,8 @@ abstract class HomeEvent {}
 class HomeInitialEvent extends HomeEvent {}
 
 class HomeUserLogoutEvent extends HomeEvent {
-  final User currentUser;
+  final UserRepository userRepo;
 
-  HomeUserLogoutEvent({required this.currentUser});
+  HomeUserLogoutEvent({required this.userRepo});
 }
 

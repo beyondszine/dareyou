@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:dareyou/data/user_model.dart';
-import 'package:dareyou/utils/firestore_utils.dart' as firebase_utils;
+import 'package:dareyou/repositories/user_repo.dart';
 import 'package:flutter/cupertino.dart';
 
 part 'home_event.dart';
@@ -18,23 +17,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   FutureOr<void> homeInitialEvent(HomeInitialEvent event, Emitter<HomeState> emit) async {
 
     emit(HomeLoadingState());
-
-    try{
-      User? currentUser = await firebase_utils.getFirestoreUser();
-      if (currentUser == null) {
-        emit(HomeUserNotSignedInState());
-      } else {
-        emit(HomeUserSignedInState(currentUser: currentUser));
-      }
-    } catch (e) {
+    UserRepository userRepo = UserRepository();
+    try {
+      await userRepo.initialize();
+      emit(HomeUserSignedInState(userRepo: userRepo));
+    } catch(e) {
       debugPrint(e.toString());
       emit(HomeUserNotSignedInState());
     }
   }
 
   FutureOr<void> homeUserLogoutEvent(HomeUserLogoutEvent event, Emitter<HomeState> emit) {
-    User currentUser = event.currentUser;
-    currentUser.logout();
+    UserRepository userRepo = event.userRepo;
+    userRepo.logout();
     emit(HomeUserSignedOutState());
   }
 }
