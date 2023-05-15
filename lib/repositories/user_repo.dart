@@ -22,11 +22,7 @@ class UserRepository {
   Future<void> update({updateJson=const {}}) async {
     bool userExists = await firestore_utils.checkDocumentExists(firestore_utils.users, _currentUser.id);
     if (userExists) {
-      Map<String, dynamic> firestoreUser = _currentUser.toJson();
-      firestoreUser["_updatedAt"] = DateTime.now();
-      updateJson.forEach((key, value) {
-        firestoreUser[key] = updateJson[value];
-      });
+      Map<String, dynamic> firestoreUser = { ..._currentUser.toJson(), ...updateJson, "updatedAt": DateTime.now() };
       _currentUser = User.fromJson(firestoreUser);
       await firestore_utils.updateFirestoreUserById(_currentUser.id, _currentUser.toJson());
     } else {
@@ -38,9 +34,8 @@ class UserRepository {
 
     bool userExists = await firestore_utils.checkDocumentExists(firestore_utils.users, _currentUser.id);
     if (userExists) {
-      Map<String, dynamic> firestoreUser = _currentUser.toJson();
-      firestoreUser["_deleted"] = true;
-      await firestore_utils.updateFirestoreUserById(_currentUser.id, _currentUser.toJson());
+      Map<String, dynamic> firestoreUser = { ..._currentUser.toJson(), "_deleted": true };
+      await firestore_utils.updateFirestoreUserById(_currentUser.id, firestoreUser);
     } else {
       debugPrint('User does not exists.');
     }
@@ -49,10 +44,9 @@ class UserRepository {
   Future<void> loggin() async {
     bool userExists = await firestore_utils.checkDocumentExists(firestore_utils.users, _currentUser.id);
     if (userExists) {
-      Map<String, dynamic> firestoreUser = await firestore_utils.getFirestoreUserById(_currentUser.id);
-      firestoreUser["_lastLogginAt"] = DateTime.now();
-      _currentUser = User.fromJson(firestoreUser);
-      await firestore_utils.updateFirestoreUserById(_currentUser.id, _currentUser.toJson());
+      Map<String, dynamic> firestoreUser = { ..._currentUser.toJson(), "_lastLogginAt": DateTime.now() };
+      await firestore_utils.updateFirestoreUserById(_currentUser.id, firestoreUser);
+      // Move anything that is other than this in loggin to CF
     } else {
       debugPrint('User loggin not updated in Store!');
     }

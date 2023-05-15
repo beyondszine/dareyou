@@ -24,7 +24,7 @@ class User {
   DateTime? _createdAt;
   DateTime? _updatedAt;
   bool? active;
-  String? fcmToken;
+  Map<String, dynamic>? _fcmToken;
 
   User({
     this.fediverseId,
@@ -39,14 +39,19 @@ class User {
     this.language,
     this.gender,
     this.image,
-    this.active,
-    this.fcmToken
+    this.active
   }): id = firebaseAuth.currentUser!.uid,
       email = firebaseAuth.currentUser!.email,
       mobile = firebaseAuth.currentUser!.phoneNumber,
+      _deleted = false,
       _createdAt = DateTime.now(),
       _updatedAt = DateTime.now(),
-      _lastLogginAt = DateTime.now();
+      _lastLogginAt = DateTime.now(),
+      _fcmToken = {};
+
+  Map<String, dynamic>? get fcmToken {
+    return _fcmToken;
+  }
 
   // create user object from Map<String, dynamic> data.
   User.fromJson(Map<String, dynamic> json)
@@ -64,48 +69,46 @@ class User {
     language = json['language'];
     gender = json['gender'];
     image = json['image'];
+    active = json['active'];
     _deleted = json['_deleted'];
     _lastLogginAt = (json['_lastLogginAt'] as Timestamp).toDate();
     _createdAt =  (json['_createdAt'] as Timestamp).toDate();
     _updatedAt = (json['_updatedAt'] as Timestamp).toDate();
-    active = json['active'];
-    fcmToken = json['fcmToken'];
+    _fcmToken = json['_fcmToken'];
   }
 
-  Map<String, dynamic> toJson() {
-    Map<String, dynamic> data = {};
-    data['id'] = id;
-    data['name'] = name;
-    data['email'] = email;
-    data['mobile'] = mobile;
-    data['bio'] = bio;
-    data['age'] = age;
-    data['address'] = address;
-    data['country'] = country;
-    data['state'] = state;
-    data['city'] = city;
-    data['pincode'] = pincode;
-    data['language'] = language;
-    data['gender'] = gender;
-    data['image'] = image;
-    data['_deleted'] = _deleted;
-    data['_lastLogginAt'] = _lastLogginAt;
-    data['_createdAt'] = _createdAt;
-    data['_updatedAt'] = _updatedAt;
-    data['active'] = active;
-    data['fcmToken'] = fcmToken;
+  Map<String, dynamic> toJson({List<String> fields= const []}) {
+    Map<String, dynamic> userJson = {};
+    userJson['id'] = id;
+    userJson['name'] = name;
+    userJson['email'] = email;
+    userJson['mobile'] = mobile;
+    userJson['bio'] = bio;
+    userJson['age'] = age;
+    userJson['address'] = address;
+    userJson['country'] = country;
+    userJson['state'] = state;
+    userJson['city'] = city;
+    userJson['pincode'] = pincode;
+    userJson['language'] = language;
+    userJson['gender'] = gender;
+    userJson['image'] = image;
+    userJson['active'] = active;
 
-    return data;
-  }
+    if(fields.isNotEmpty) {
+      Map<String, dynamic> extractJson = {};
 
-  Map<String, dynamic> extractFields({List<String> fields= const []}) {
-    Map<String, dynamic> userJson = toJson();
-    Map<String, dynamic> extractJson = {};
+      for(final field in fields) {
+        extractJson[field] = userJson[field];
+      }
 
-    for(final field in fields) {
-      extractJson[field] = userJson[field];
+      return extractJson;
+    } else {
+      return userJson;
     }
+  }
 
-    return extractJson;
+  void updateFcmToken() {
+    _fcmToken = {};
   }
 }
