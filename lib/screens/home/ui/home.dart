@@ -1,29 +1,76 @@
+import 'package:dareyou/assets/consts.dart';
+import 'package:dareyou/screens/home/bloc/home_bloc.dart';
 import 'package:dareyou/screens/login/ui/login.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () {
-              logout();
-              Navigator.of(context).popUntil((route) => route.isFirst);
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
-            },
-            icon: const Icon(Icons.logout_outlined)
-          ),
-        ],
-      ),
-    );
-  }
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-Future<void> logout() async {
-  await FirebaseAuth.instance.signOut();
+class _HomeScreenState extends State<HomeScreen> {
+
+  HomeBloc homeBloc = HomeBloc();
+
+  @override
+  void initState(){
+    debugPrint("HomeScreen: initState");
+    homeBloc.add(HomeInitialEvent());
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<HomeBloc, HomeState>(
+      bloc: homeBloc,
+      listenWhen: (previous, current) => current is HomeActionState,
+        buildWhen: (previous, current) => current is! HomeActionState,
+      listener: (context, state) {
+        switch (state.runtimeType) {
+          case HomeUserNotSignedInState:
+            debugPrint(logOutSnackBarMessage);
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content: Text(userNotRegisteredText)),
+            );
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()));
+            break;
+          case HomeUserSignedOutState:
+            debugPrint(logOutSnackBarMessage);
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()));
+            break;
+          default:break;
+        }
+      },
+      builder: (context, state) {
+        switch(state.runtimeType) {
+          case HomeUserSignedInState:
+            final HomeUserSignedInState homeUserRegisteredState = state as HomeUserSignedInState;
+            return Scaffold(
+              appBar: AppBar(
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      homeBloc.add(HomeUserLogoutEvent(userRepo: homeUserRegisteredState.userRepo));
+                    },
+                    icon: const Icon(Icons.logout_outlined)
+                  ),
+                ],
+              ),
+              body: Text("${homeUserRegisteredState.userRepo})")
+            ); 
+          default:
+            return Scaffold(
+              appBar: AppBar(),
+              body: const Center(child: CircularProgressIndicator()),
+            ); 
+        }
+      },
+    );
+  }
 }

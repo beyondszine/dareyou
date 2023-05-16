@@ -43,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
               );
               // So, we've got an error! lets go back to home/login page
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()));
+                  MaterialPageRoute(builder: (context) => const LoginScreen()));
               break;
             case LoginGoogleVerificationFailedState:
               final failedState = state as LoginGoogleVerificationFailedState;
@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
               );
               // So, we've got an error! lets go back to home/login page
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()));
+                  MaterialPageRoute(builder: (context) => const LoginScreen()));
               break;
             case LoginNavigateToVerifyPageActionState:
               debugPrint("Navigating to verification screen!!");
@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
               break;
             case LoginNavigateToHomePageActionState:
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()));
+                MaterialPageRoute(builder: (context) => const HomeScreen()));
               break;
             default:
               debugPrint("Unhandled Action State!");
