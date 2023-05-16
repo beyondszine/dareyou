@@ -15,14 +15,21 @@ class UserRepository {
     if (userExists) {
       await loggin();
     } else {
-      await firestore_utils.createFirestoreUser(_currentUser.toJson());
+      Map<String, dynamic> createUserJson = { 
+        ..._currentUser.toJson(),
+        "_updatedAt": DateTime.now(),
+        "_createdAt": DateTime.now(),
+        "_deleted": false,
+        "_lastLogginAt": DateTime.now()
+      };
+      await firestore_utils.createFirestoreUser(createUserJson);
     }
   }
 
   Future<void> update({updateJson=const {}}) async {
     bool userExists = await firestore_utils.checkDocumentExists(firestore_utils.users, _currentUser.id);
     if (userExists) {
-      Map<String, dynamic> firestoreUser = { ..._currentUser.toJson(), ...updateJson, "updatedAt": DateTime.now() };
+      Map<String, dynamic> firestoreUser = { ..._currentUser.toJson(), ...updateJson, "_updatedAt": DateTime.now() };
       _currentUser = User.fromJson(firestoreUser);
       await firestore_utils.updateFirestoreUserById(_currentUser.id, _currentUser.toJson());
     } else {

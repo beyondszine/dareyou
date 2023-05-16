@@ -24,7 +24,7 @@ class User {
   DateTime? _createdAt;
   DateTime? _updatedAt;
   bool? active;
-  Map<String, dynamic>? _fcmToken;
+  Map<String, dynamic> _fcmToken;
 
   User({
     this.fediverseId,
@@ -47,15 +47,15 @@ class User {
       _createdAt = DateTime.now(),
       _updatedAt = DateTime.now(),
       _lastLogginAt = DateTime.now(),
-      _fcmToken = {};
+      _fcmToken = {"token": "", "updatedAt": null };
 
-  Map<String, dynamic>? get fcmToken {
+  Map<String, dynamic> get fcmToken {
     return _fcmToken;
   }
 
   // create user object from Map<String, dynamic> data.
   User.fromJson(Map<String, dynamic> json)
-  : id = json["id"] {
+  : id = json["id"], _fcmToken = json["_fcmToken"] {
     name = json['name'];
     email = json['email'];
     mobile = json['mobile'];
@@ -74,7 +74,6 @@ class User {
     _lastLogginAt = (json['_lastLogginAt'] as Timestamp).toDate();
     _createdAt =  (json['_createdAt'] as Timestamp).toDate();
     _updatedAt = (json['_updatedAt'] as Timestamp).toDate();
-    _fcmToken = json['_fcmToken'];
   }
 
   Map<String, dynamic> toJson({List<String> fields= const []}) {
@@ -94,6 +93,7 @@ class User {
     userJson['gender'] = gender;
     userJson['image'] = image;
     userJson['active'] = active;
+    userJson['fcmToken'] = fcmToken;
 
     if(fields.isNotEmpty) {
       Map<String, dynamic> extractJson = {};
@@ -109,6 +109,6 @@ class User {
   }
 
   void updateFcmToken() {
-    _fcmToken = {};
+    _fcmToken = {"token": "", "updatedAt": DateTime.now() };
   }
 }
